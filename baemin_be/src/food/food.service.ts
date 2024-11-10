@@ -1,19 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFoodDto } from './dto/create-food.dto';
-import { UpdateFoodDto } from './dto/update-food.dto';
+import { CreateFoodDto } from './dto/request/create-food.dto';
+import { PrismaPostgresService } from 'src/prisma/prisma.service';
+import { UpdateFoodDto } from './dto/request/update-food.dto';
 
 @Injectable()
 export class FoodService {
+
+  constructor(
+    private postgresDAO: PrismaPostgresService
+  ){}
+
   create(createFoodDto: CreateFoodDto) {
     return 'This action adds a new food';
   }
 
   findAll() {
-    return `This action returns all food`;
-  }
+    return this.postgresDAO.food.findMany();
+  }                     
 
-  findOne(id: number) {
-    return `This action returns a #${id} food`;
+  findById(id: string) {
+    return this.postgresDAO.food.findFirstOrThrow({
+      where: {
+        food_id: id
+      }
+    });
   }
 
   update(id: number, updateFoodDto: UpdateFoodDto) {

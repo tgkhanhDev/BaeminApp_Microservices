@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output = "../../node_modules/.prismas/client-postgres"
+  output   = "../../node_modules/.prismas/client-postgres"
 }
 
 datasource db {
@@ -85,6 +85,7 @@ enum food_type {
   sale
   rice_chicken @map("rice chicken")
   bubble_tea   @map("bubble tea")
+  none
 }
 
 enum payment_status {

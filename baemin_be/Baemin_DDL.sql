@@ -6,7 +6,7 @@ CREATE TYPE user_role AS ENUM ('BUYER', 'SELLER', 'ADMIN');
 CREATE TYPE shop_category AS ENUM ('Restaurant', 'Bistro', 'Coffee', 'Dessert', 'Shop Online');
 CREATE TYPE shop_label AS ENUM ('Food', 'Drink', 'Vege', 'Dessert', 'Noodles');
 CREATE TYPE shop_location AS ENUM ('Ho Chi Minh', 'Ha Noi', 'Da Nang');
-CREATE TYPE food_type AS ENUM ('combo', 'sale', 'rice chicken', 'bubble tea');
+CREATE TYPE food_type AS ENUM ('combo', 'sale', 'rice chicken', 'bubble tea', 'none');
 CREATE TYPE payment_status AS ENUM ('Unpaid', 'Paid');
 CREATE TYPE transaction_status AS ENUM ('not started', 'in progress', 'complete');
 
