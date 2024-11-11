@@ -1,0 +1,3 @@
+[submodule "baemin-be/baemin-api-gateway"]
+	path = baemin-be/baemin-api-gateway
+	url = git@github.com:tgkhanhDev/BaeminApp_Microservices.git
