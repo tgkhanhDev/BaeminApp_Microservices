@@ -3,6 +3,7 @@ import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { PrismaPostgresService } from 'src/prisma/prisma.service';
 import { ShopResponseDto } from './dto/shops-response.dto';
+import { ShopFilterRequestDto } from './dto/shop-request.dto';
 
 @Injectable()
 export class ShopService {
@@ -11,8 +12,16 @@ export class ShopService {
     private postgresDAO: PrismaPostgresService
   ) { }
 
-  findAll(): Promise<ShopResponseDto[]> {
+  findAllShopFilter(shopFilterRequestDto: ShopFilterRequestDto): Promise<ShopResponseDto[]> {
+
+    const { label, location, name } = shopFilterRequestDto;
+
     return this.postgresDAO.shop.findMany({
+      where: {
+        ...(label ? { label } : {}),  // Include 'label' only if it is not empty or undefined
+        ...(location ? { location } : {}), // Include 'location' only if it is not empty or undefined
+        ...(name ? { shop_name: { contains: name } } : {}), // Include 'name' only if it is not empty or undefined
+      },
       select: {
         shop_id: true,
         shop_name: true,
@@ -29,10 +38,6 @@ export class ShopService {
         is_open: true,
       },
     });
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} shop`;
   }
 
 }

@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Food } from 'src/food/entities/food.entity';
 
+export enum FoodType {
+    COMBO = "combo",
+    SALE = "sale",
+    RICE_CHICKEN = "rice chicken", // Matches Prisma mapped name
+    BUBBLE_TEA = "bubble tea",     // Matches Prisma mapped name
+    NONE = "none",
+}
 export class Shop {
     @ApiProperty({ description: 'Unique identifier for the shop', example: 'e58f1b28-470e-485a-bc56-50108d08e197' })
     shop_id: string;

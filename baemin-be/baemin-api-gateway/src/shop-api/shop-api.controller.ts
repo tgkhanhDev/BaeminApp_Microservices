@@ -1,8 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ShopApiService } from './shop-api.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { lastValueFrom } from 'rxjs';
 import { ShopResponseDto } from './dto/shops-response.dto';
+import { ShopLocation, ShopLabel } from './entities/shop.entity';
+import { ShopFilterRequestDto } from './dto/shop-request.dto';
 
 @Controller('shop-api')
 @ApiTags("Shop")
@@ -11,20 +13,33 @@ export class ShopApiController {
 
   @Get('')
   @ApiOperation({
-    summary: 'Get all shops',
-    // description: 'Fetches a list of all available food items from the database',
+    summary: 'Get all shops by label',
+  })
+  @ApiQuery({
+    name: 'label',
+    enum: ShopLabel,
+    example: ShopLabel.FOOD,
+    required: false,
+  })
+  @ApiQuery({
+    name: 'location',
+    enum: ShopLocation,
+    example: ShopLocation.Ho_Chi_Minh,
+    required: false,
+  })
+  @ApiQuery({
+    name: 'name',
+    example: "Gà Ủ Muối",
+    required: false,
   })
   @ApiResponse({
     status: 200,
     description: 'Successfully fetched all food items',
-    type: [ShopResponseDto],  
+    type: [ShopResponseDto],
   })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error',
-  })
-  async findAllShops(): Promise<ShopResponseDto[]> {
-    let res = await this.shopApiService.findAllShops();
+  async findAllShops(@Query() filter: ShopFilterRequestDto): Promise<ShopResponseDto[]> {
+    const res = await this.shopApiService.findAllShopsFilter(filter);
     return res;
   }
+
 }
