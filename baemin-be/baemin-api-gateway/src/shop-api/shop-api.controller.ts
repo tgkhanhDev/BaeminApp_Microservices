@@ -1,8 +1,8 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ShopApiService } from './shop-api.service';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { lastValueFrom } from 'rxjs';
-import { ShopResponseDto } from './dto/shops-response.dto';
+import { ShopResponseDetailDto, ShopResponseDto } from './dto/shops-response.dto';
 import { ShopLocation, ShopLabel } from './entities/shop.entity';
 import { ShopFilterRequestDto } from './dto/shop-request.dto';
 
@@ -29,7 +29,7 @@ export class ShopApiController {
   })
   @ApiQuery({
     name: 'name',
-    example: "Gà Ủ Muối",
+    example: "Dessert Kingdom",
     required: false,
   })
   @ApiResponse({
@@ -39,6 +39,26 @@ export class ShopApiController {
   })
   async findAllShops(@Query() filter: ShopFilterRequestDto): Promise<ShopResponseDto[]> {
     const res = await this.shopApiService.findAllShopsFilter(filter);
+    return res;
+  }
+
+  @Get('/:shop_id')
+  @ApiOperation({
+    summary: 'Get shop details by ID',
+  })
+  @ApiParam({
+    name: 'shop_id',
+    description: 'ID of the shop to retrieve details for',
+    required: true,
+    example: '4e69b389-9d4b-401a-943d-936bbde62f1a',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched shop details',
+    type: ShopResponseDetailDto,
+  })
+  async findShopDetailById(@Param('shop_id') shop_id: string): Promise<ShopResponseDetailDto> {
+    const res = await this.shopApiService.findShopDetailById(shop_id);
     return res;
   }
 

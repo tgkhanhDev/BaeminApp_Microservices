@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { PrismaPostgresService } from 'src/prisma/prisma.service';
-import { ShopResponseDto } from './dto/shops-response.dto';
+import { ShopResponseDetailDto, ShopResponseDto } from './dto/shops-response.dto';
 import { ShopFilterRequestDto } from './dto/shop-request.dto';
 
 @Injectable()
@@ -38,6 +38,40 @@ export class ShopService {
         is_open: true,
       },
     });
+  }
+
+  findShopById(shop_id: string): Promise<any> { 
+    return this.postgresDAO.shop.findUniqueOrThrow({
+      where: {
+        shop_id
+      },
+      select: {
+        shop_id: true,
+        shop_name: true,
+        shop_address: true,
+        shop_thumbnail: true,
+        category: true,
+        label: true,
+        location: true,
+        rating: true,
+        open_time: true,
+        close_time: true,
+        price_start: true,
+        price_end: true,
+        is_open: true,
+        Food: {
+          select: {
+            food_id: true,
+            food_name: true,
+            description: true,
+            price: true,
+            type: true,
+            Shop: false,
+            shop_id:false
+          }
+        }
+      }
+    })
   }
 
 }

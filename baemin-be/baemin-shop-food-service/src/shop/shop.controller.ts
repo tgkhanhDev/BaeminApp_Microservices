@@ -14,5 +14,10 @@ export class ShopController {
   findByShopLabel(@Payload() filter: ShopFilterRequestDto): Promise<ShopResponseDto[]> {
     return this.shopService.findAllShopFilter(filter);
   }
+  
+  @MessagePattern("get-shop-detail-by-id")
+  findShopById(shop_id: string): Promise<any> { 
+    return this.shopService.findShopById(shop_id);
+  }
 
 }
