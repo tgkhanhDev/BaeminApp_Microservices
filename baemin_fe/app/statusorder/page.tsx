@@ -92,7 +92,7 @@ const Page: React.FC = () => {
                 <div className='col-span-9 pt-3 pl-6 pr-10 flex flex-col gap-2 pb-3 h-full'>
                     <div className='w-full h-[70%] rounded-md'>
                         <div className='w-full h-full relative'>
-                            <Image layout="fill" objectFit="cover" src={'/images/baemin-1.jpg'} alt=''></Image>
+                            <Image fill style={{objectFit:"cover"}} src={'/images/baemin-1.jpg'} alt=''></Image>
                         </div>
 
                     </div>

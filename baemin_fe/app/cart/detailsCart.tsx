@@ -10,7 +10,7 @@ export default function DetailsCart({ Details }: {
     return (
         <>
         {Details.map((items, index) => (
-            <div className="w-full flex flex-col  bg-white rounded-md ">
+            <div key={items.id || index} className="w-full flex flex-col  bg-white rounded-md ">
                 
                     <div className=" flex flex-row my-7 ml-8 items-center gap-3">
                         <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded   dark:ring-offset-gray-800 " />
@@ -30,7 +30,7 @@ export default function DetailsCart({ Details }: {
                                     <div className="pl-8  col-span-4 flex items-center flex-row gap-3">
                                         <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded   dark:ring-offset-gray-800 " />
                                         <div className="relative h-36 w-36">
-                                            <Image layout="fill" objectFit="cover" src={item.img} alt={""} />
+                                            <Image fill style={{objectFit:"cover"}} src={item.img} alt={""} />
                                         </div>
                                         <div className="flex flex-col gap-3">
                                             <span className="text-base ">{item.namefood}</span>

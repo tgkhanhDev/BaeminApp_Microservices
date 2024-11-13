@@ -19,7 +19,7 @@ export default function DetailsCheckout({ items }: { items: any[] }) {
             <div key={index} className="mt-4 ml-10 grid grid-cols-12">
             <div className="col-span-6 flex flex-row items-center gap-3" >
                 <div className="w-16 h-16 relative" > 
-                    <Image  layout="fill" objectFit="cover" src={item.img} alt={""}  ></Image>
+                    <Image fill style={{objectFit:"cover"}} src={item.img} alt={""}  ></Image>
                 </div>
                 <div className="flex flex-col gap-1">
                     <span className="text-base">{item.name}</span>

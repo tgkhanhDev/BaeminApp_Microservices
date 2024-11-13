@@ -25,7 +25,7 @@ export default function Home() {
             <div className="bg-white w-full h-80 flex">
                 <div className="w-[45%] h-full py-4 px-10">
                     <div className="w-full relative h-full" >
-                        <Image layout="fill" objectFit="cover" src={"/food/ga1.jpg"} alt="Ga"></Image>
+                        <Image fill style={{objectFit:"cover"}} src={"/food/ga1.jpg"} alt="Ga"></Image>
                     </div>
                 </div>
                 <div className=" w-[55%] h-full relative">
@@ -114,7 +114,7 @@ export default function Home() {
                             <div className="flex flex-col w-full gap-43 border-b">
                                 <div className="flex flex-row ">
                                     <div className="w-[15%] relative h-16">
-                                        <Image layout="fill" objectFit="cover" src={'/images/Ga.png'} alt="s" ></Image>
+                                        <Image fill style={{objectFit:"cover"}} src={'/images/Ga.png'} alt="s" ></Image>
                                     </div>
                                     <div className="w-[60%] flex flex-col gap-1 px-2">
                                        <span className="font-bold text-[#464646] ">Mua 2 Tặng 2 Gà Rán </span>
@@ -129,7 +129,7 @@ export default function Home() {
                                 </div>
                                 <div className="flex flex-row ">
                                     <div className="w-[15%] relative h-16">
-                                        <Image layout="fill" objectFit="cover" src={'/images/Ga.png'} alt="s" ></Image>
+                                        <Image fill style={{objectFit:"cover"}} src={'/images/Ga.png'} alt="s" ></Image>
                                     </div>
                                     <div className="w-[60%] flex flex-col gap-1 px-2">
                                        <span className="font-bold text-[#464646] ">Mua 2 Tặng 2 Gà Rán </span>
