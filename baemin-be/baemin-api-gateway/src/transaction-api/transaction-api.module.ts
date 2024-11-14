@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { FoodApiService } from './food-api.service';
-import { FoodApiController } from './food-api.controller';
+import { TransactionApiService } from './transaction-api.service';
+import { TransactionApiController } from './transaction-api.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
@@ -8,11 +8,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ClientsModule.register(
       [
         {
-          name: 'FOOD_API',
+          name: 'PAYMENT_API',
           transport: Transport.RMQ,
           options: {
             urls: ['amqp://admin:170504@trangiangkhanh.site:5672'],
-            queue: 'shop_food_queue',
+            queue: 'payment_queue',
             queueOptions: {
               durable: true
             },
@@ -22,7 +22,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       ]
     )
   ],
-  controllers: [FoodApiController],
-  providers: [FoodApiService],
+  controllers: [TransactionApiController],
+  providers: [TransactionApiService],
 })
-export class FoodApiModule { }
+export class TransactionApiModule {}

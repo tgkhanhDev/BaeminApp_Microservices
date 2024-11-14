@@ -11,7 +11,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           name: 'SHOP_API',
           transport: Transport.RMQ,
           options: {
-            urls: ['amqp://admin:170504@localhost:5672'],
+            urls: ['amqp://admin:170504@trangiangkhanh.site:5672'],
             queue: 'shop_food_queue',
             queueOptions: {
               durable: true
