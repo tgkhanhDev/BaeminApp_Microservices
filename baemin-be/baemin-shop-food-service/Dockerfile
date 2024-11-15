@@ -9,7 +9,7 @@ COPY package.json yarn.lock ./
 
 # Install dependencies
 RUN yarn install
-RUN yarn prisma generate --schema src/prisma/schema-postgres.prisma 
+# RUN yarn prisma generate --schema src/prisma/schema-postgres.prisma 
 
 # Copy the rest of the application code to the working directory
 COPY . .
@@ -20,4 +20,5 @@ RUN yarn build
 # The microservice might run a script or background process, so there's no need to expose a port
 
 # Command to run the application
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/main.js"]
+

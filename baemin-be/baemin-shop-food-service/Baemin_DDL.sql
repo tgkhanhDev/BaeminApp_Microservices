@@ -46,7 +46,8 @@ CREATE TABLE "Shop" (
     close_time TIME,  
     price_start INT,
     price_end INT,
-    is_open BOOLEAN NOT NULL DEFAULT TRUE
+    is_open BOOLEAN NOT NULL DEFAULT TRUE,
+    user_id UUID
 );
 
 -- Create Food Table
@@ -55,7 +56,8 @@ CREATE TABLE "Food" (
     food_name VARCHAR(255) NOT NULL,
     description TEXT,
     price INT NOT NULL,
-    type food_type NOT NULL,  
+    type food_type NOT NULL,
+    shop_thumbnail VARCHAR(255),  
     shop_id UUID,
     FOREIGN KEY (shop_id) REFERENCES "Shop"(shop_id) ON DELETE CASCADE
 );
