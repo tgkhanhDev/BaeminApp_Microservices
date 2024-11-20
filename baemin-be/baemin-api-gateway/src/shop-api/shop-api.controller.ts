@@ -45,6 +45,7 @@ export class ShopApiController {
   @Get('/:shop_id')
   @ApiOperation({
     summary: 'Get shop details by ID',
+    description: 'Filter In Frontend'
   })
   @ApiParam({
     name: 'shop_id',
