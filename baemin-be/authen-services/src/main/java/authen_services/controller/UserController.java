@@ -1,5 +1,7 @@
 package authen_services.controller;
 
+import authen_services.dto.request.CreateUserRequest;
+import authen_services.dto.request.LoginRequest;
 import authen_services.dto.response.ApiResponse;
 import authen_services.dto.response.UserResponse;
 import authen_services.service.UserService;
@@ -8,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/authen")
@@ -30,6 +30,25 @@ public class UserController {
                 .code(200)
                 .message("OK")
                 .data(userService.getMyInfo())
+                .build();
+    }
+
+    @PostMapping("/login")
+    public ApiResponse<UserResponse> login(@RequestBody LoginRequest req) {
+        return ApiResponse.<UserResponse>builder()
+                .code(200)
+                .message("OK")
+                .data(userService.login(req))
+                .build();
+    }
+
+
+    @PostMapping("/create-account")
+    public ApiResponse<UserResponse> createAccount(@RequestBody CreateUserRequest req) {
+//        userService.createAccount(req);
+        return ApiResponse.<UserResponse>builder()
+                .code(200)
+                .data(userService.createAccount(req))
                 .build();
     }
 }
