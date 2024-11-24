@@ -5,6 +5,7 @@ import authen_services.dto.request.LoginRequest;
 import authen_services.dto.response.ApiResponse;
 import authen_services.dto.response.UserResponse;
 import authen_services.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -34,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/create-account")
-    public ApiResponse<UserResponse> createAccount(@RequestBody CreateUserRequest req) {
+    public ApiResponse<UserResponse> createAccount(@RequestBody @Valid CreateUserRequest req) {
 //        userService.createAccount(req);
         return ApiResponse.<UserResponse>builder()
                 .code(200)

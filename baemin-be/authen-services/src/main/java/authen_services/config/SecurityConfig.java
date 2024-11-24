@@ -51,6 +51,7 @@ public class SecurityConfig {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
+
         return httpSecurity.build();
     }
 
