@@ -1,4 +1,4 @@
-package authen_services.config;
+package authen_services.config.JWT;
 
 import authen_services.dto.response.ApiResponse;
 import authen_services.exception.ErrorCode;
