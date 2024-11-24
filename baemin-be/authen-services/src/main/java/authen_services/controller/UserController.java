@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/authen")
+@RequestMapping("/user")
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
@@ -32,16 +32,6 @@ public class UserController {
                 .data(userService.getMyInfo())
                 .build();
     }
-
-    @PostMapping("/login")
-    public ApiResponse<UserResponse> login(@RequestBody LoginRequest req) {
-        return ApiResponse.<UserResponse>builder()
-                .code(200)
-                .message("OK")
-                .data(userService.login(req))
-                .build();
-    }
-
 
     @PostMapping("/create-account")
     public ApiResponse<UserResponse> createAccount(@RequestBody CreateUserRequest req) {

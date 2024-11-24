@@ -5,9 +5,12 @@ import authen_services.dto.request.LoginRequest;
 import authen_services.dto.request.UpdateUserRequest;
 import authen_services.dto.response.UserResponse;
 import authen_services.enums.UserRole;
+import authen_services.exception.AuthenException;
+import authen_services.exception.ErrorCode;
 import authen_services.mapper.UserMapper;
 import authen_services.model.User;
 import authen_services.repository.UserRepository;
+import jakarta.persistence.EnumType;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -37,7 +41,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse login(LoginRequest req) {
 
-        UserResponse user = userMapper.toUserResponse(userRepository.findByEmail(req.getEmail()));
+        var user = userMapper.toUserResponse(userRepository.findByEmail(req.getEmail()).orElse(null));
 
         log.info("User: {}", user);
 
@@ -57,31 +61,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponse updateAccount(String userId, UpdateUserRequest req) {
         return null;
     }
 
     @Override
+    @Transactional
     public UserResponse createAccount(CreateUserRequest req) {
-        if(userRepository.findByEmail(req.getEmail()) != null) {
-            log.info("User {} already exists", req.getEmail());
-            return null;
+        // Kiểm tra user đã tồn tại
+        var userFound = userRepository.findByEmail(req.getEmail());
+
+        if (userFound.isPresent()) {
+            throw new AuthenException(ErrorCode.USER_EXISTED);
         }
 
-        var pas = passwordEncoder.encode(req.getPassword());
+        userFound = userRepository.findByPhoneNumber(req.getPhoneNumber());
+        if(userFound.isPresent()){
+            throw new AuthenException(ErrorCode.PHONE_EXISTED);
+        }
 
-        log.info("Password: {}", pas);
-        req.setPassword(pas);
+        // Mã hóa password
+        String hashedPassword = passwordEncoder.encode(req.getPassword());
+        req.setPassword(hashedPassword);
 
+        // Ánh xạ DTO thành Entity
         User user = userMapper.toUser(req);
-        user.setRole(UserRole.BUYER);
+        user.setRole(UserRole.valueOf("BUYER")); // Đảm bảo enum chính xác
         user.setActive(true);
 
-//        log.info("Decode: {}", passwordEncoder.matches(req.getPassword(), pas));
+        // Lưu vào database
+        User savedUser = userRepository.save(user);
 
-        UserResponse userRes = userMapper.toUserResponse(user);
-        return userRes;
+        // Trả về DTO phản hồi
+        return userMapper.toUserResponse(savedUser);
     }
+
 
     @Override
     public UserResponse getMyInfo() {

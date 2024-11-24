@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.UUID;
+
 
 @Entity
 @Table(name = "\"Users\"")
@@ -19,7 +21,7 @@ public class User {
     @Id
     @UuidGenerator
     @Column(name = "user_id")
-    String userId;
+    UUID userId;
 
     @Column(name = "email", nullable = false, unique = true)
     String email;
@@ -37,8 +39,8 @@ public class User {
     String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    UserRole role;
+    @Column(nullable = false)
+    private UserRole role;
 
     @Column(name = "is_active", nullable = false)
     boolean isActive;
