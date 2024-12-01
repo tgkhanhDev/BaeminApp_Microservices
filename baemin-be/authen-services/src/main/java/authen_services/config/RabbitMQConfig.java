@@ -1,6 +1,5 @@
-package api_gateway.config;
+package authen_services.config;
 
-import com.rabbitmq.client.AMQP;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -69,8 +68,8 @@ public class RabbitMQConfig {
                 .to(dlqExchange())
                 .with(dlqRoutingKey);
     }
-
-    //Config for communicating via JSON
+    //
+    //!Config for communicating via JSON
     @Bean
     public Jackson2JsonMessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
@@ -83,7 +82,6 @@ public class RabbitMQConfig {
         return rabbitTemplate;
     }
 
-    //ConnectionFactory
-    //RabbitTemplate
-    //RabbitAdmin
+
+
 }

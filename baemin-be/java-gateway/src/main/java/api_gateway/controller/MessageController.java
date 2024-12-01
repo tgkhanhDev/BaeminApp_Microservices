@@ -19,7 +19,7 @@ public class MessageController {
 
     @GetMapping("/publish")
     public ResponseEntity<String> sendMessage(@RequestParam("message") String message ){
-        producer.sendMessage(message);
+//        producer.sendMessage(message);
         return ResponseEntity.ok("Message Sent Successfully: " + message);
     }
 }

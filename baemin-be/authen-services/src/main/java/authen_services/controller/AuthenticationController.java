@@ -27,19 +27,21 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
-        var result = authenticationService.authenticate(request);
-        return ApiResponse.<AuthenticationResponse>builder()
-                .data(result)
-                .build();
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+//        var result = authenticationService.authenticate(request);
+//        return ApiResponse.<AuthenticationResponse>builder()
+//                .data(result)
+//                .build();
+        return null;
     }
 
     @PostMapping("/introspect")
-    ApiResponse<IntrospectResponse> introspect (@RequestBody IntrospectRequest request) {
-        return ApiResponse.<IntrospectResponse>builder()
-                .code(200)
-                .data(authenticationService.introspect(request))
-                .build();
+    ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request) {
+//        return ApiResponse.<IntrospectResponse>builder()
+//                .code(200)
+//                .data(authenticationService.introspect(request))
+//                .build();
+        return null;
     }
 
 }

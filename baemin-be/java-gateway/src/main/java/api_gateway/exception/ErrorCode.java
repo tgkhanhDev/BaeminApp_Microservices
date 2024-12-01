@@ -1,4 +1,4 @@
-package authen_services.exception;
+package api_gateway.exception;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,6 @@ public enum ErrorCode {
     USER_NOT_EXISTED(1006, "User does not exist", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1007, "Unauthenticated user", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1008, "You do not have permission", HttpStatus.FORBIDDEN);
-
     int code;
     String message;
     HttpStatusCode statusCode;

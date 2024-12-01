@@ -1,12 +1,16 @@
 package authen_services.service;
 
+import authen_services.annotation.MQEndpoint;
 import authen_services.dto.request.AuthenticationRequest;
 import authen_services.dto.request.IntrospectRequest;
+import authen_services.dto.response.ApiResponse;
 import authen_services.dto.response.AuthenticationResponse;
 import authen_services.dto.response.IntrospectResponse;
 import authen_services.exception.AuthenException;
 import authen_services.exception.ErrorCode;
 import authen_services.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -14,22 +18,28 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.channels.Channel;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationService {
     @NotNull
@@ -43,8 +53,10 @@ public class AuthenticationService {
     @Value("${refreshable-duration}")
     protected long REFRESHABLE_DURATION;
 
-    UserRepository userRepository;
-    PasswordEncoder passwordEncoder;
+    final UserRepository userRepository;
+
+    final PasswordEncoder passwordEncoder;
+
 
 
     @Autowired
@@ -52,6 +64,7 @@ public class AuthenticationService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
 
     public AuthenticationResponse authenticate(AuthenticationRequest req) {
         if (req == null || req.getEmail() == null) {
@@ -75,7 +88,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public IntrospectResponse introspect(IntrospectRequest req) {
+    public IntrospectResponse introspect(IntrospectRequest req)  {
         var token = req.getToken();
         boolean isValid = true;
 
@@ -89,6 +102,7 @@ public class AuthenticationService {
                 .valid(isValid)
                 .build();
     }
+
 
     public AuthenticationResponse refreshToken(String token) throws ParseException, JOSEException {
         SignedJWT signedJWT = verifyToken(token, true);
@@ -158,5 +172,9 @@ public class AuthenticationService {
 //        }
 
         return signedJWT;
+    }
+
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(10);
     }
 }

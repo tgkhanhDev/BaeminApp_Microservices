@@ -1,4 +1,4 @@
-package authen_services.dto.response;
+package api_gateway.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

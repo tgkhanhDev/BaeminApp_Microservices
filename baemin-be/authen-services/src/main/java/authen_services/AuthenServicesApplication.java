@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "AuthenApis", version = "1.0", description = "AuthenApis"))
+//@OpenAPIDefinition(info = @Info(title = "AuthenApis", version = "1.0", description = "AuthenApis"))
 public class AuthenServicesApplication {
 
 	public static void main(String[] args) {

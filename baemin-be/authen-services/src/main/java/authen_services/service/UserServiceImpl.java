@@ -28,13 +28,12 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
     UserMapper userMapper;
-    PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.passwordEncoder = passwordEncoder;
+//        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -66,6 +65,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    //TODO---   Return: ApiResponse<UserResponse>
     @Override
     @Transactional
     public UserResponse createAccount(CreateUserRequest req) {
@@ -82,6 +82,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // Mã hóa password
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         String hashedPassword = passwordEncoder.encode(req.getPassword());
         req.setPassword(hashedPassword);
 
