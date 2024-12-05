@@ -59,14 +59,14 @@ export class ShopService {
         price_start: true,
         price_end: true,
         is_open: true,
-        Food: {
+        food: {
           select: {
             food_id: true,
             food_name: true,
             description: true,
             price: true,
             type: true,
-            Shop: false,
+            shop: false,
             shop_id:false
           }
         }

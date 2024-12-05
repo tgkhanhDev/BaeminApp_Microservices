@@ -11,10 +11,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
-
     @Value("${rabbitmq.authen.queue.name}")
     private String resQueue;
-
     @Value("${rabbitmq.error.queue.name}")
     private String deadQueue;
 
@@ -28,12 +26,26 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.dlq.routing.key}")
     private String dlqRoutingKey;
 
+    //TODO: Food
+    @Value("${rabbitmq.foodshop.queue.name}")
+    private String foodShopQueue;
+    @Value("${rabbitmq.foodshop.routing.key}")
+    private String foodRoutingKey;
+
 
 
     //!spring bean for rabbitmq queue
     @Bean
     public Queue queue() {
         return QueueBuilder.durable(resQueue)
+                .withArgument("x-dead-letter-exchange", dlqExchange) // Dead Letter Exchange
+                .withArgument("x-dead-letter-routing-key", dlqRoutingKey) // Dead Letter Routing Key
+                .build();
+    }
+
+    @Bean
+    public Queue foodShopQueue() {
+        return QueueBuilder.durable(foodShopQueue)
                 .withArgument("x-dead-letter-exchange", dlqExchange) // Dead Letter Exchange
                 .withArgument("x-dead-letter-routing-key", dlqRoutingKey) // Dead Letter Routing Key
                 .build();
@@ -61,6 +73,13 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(queue())
                 .to(exchange())
                 .with(routingKey);
+    }
+
+    @Bean
+    public Binding foodShopbinding() {
+        return BindingBuilder.bind(foodShopQueue())
+                .to(exchange())
+                .with(foodRoutingKey);
     }
 
     @Bean
