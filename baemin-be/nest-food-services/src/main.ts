@@ -9,10 +9,6 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: ['amqp://admin:170504@localhost:5672'],
-      queue: "nest_food_service",
-      queueOptions: {
-        durable: true
-      },
       headers:{
         // "x-dead-letter-exchange": "food_queue",
         // "x-dead-letter-routing-key": "food_queue"

@@ -6,6 +6,7 @@ import { FoodModule } from './food-api/food-api.module';
 import { ConfigModule } from '@nestjs/config';
 import { ShopModule } from './shop-api/shop-api.module';
 import { CartModule } from './cart-api/cart-api.module';
+import { RabbitMQService } from './rabbit/rabbit.service';
 
 @Module({
   imports: [PrismaModule, FoodModule, ShopModule, CartModule, ConfigModule.forRoot({ isGlobal: true })],

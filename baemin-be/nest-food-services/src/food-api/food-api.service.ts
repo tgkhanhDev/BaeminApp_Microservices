@@ -4,11 +4,13 @@ import { CreateFoodDto } from './dto/request/create-food.dto';
 import { Food, FoodType } from './entities/food.entity';
 import { Prisma, food_type as PrismaFoodType } from '.prismas/client-postgres';
 import { UpdateFoodDto } from './dto/request/update-food.dto';
+import { RabbitMQService } from 'src/rabbit/rabbit.service';
 
 @Injectable()
 export class FoodApiService {
+
     constructor(
-        private postgresDAO: PrismaPostgresService
+        private postgresDAO: PrismaPostgresService,
     ) { }
 
     create(createFoodDto: CreateFoodDto) {
@@ -16,6 +18,7 @@ export class FoodApiService {
     }
 
     findAll() {
+
         return this.postgresDAO.food.findMany();
     }
 

@@ -27,9 +27,9 @@ public class RabbitMQConfig {
     private String dlqRoutingKey;
 
     //TODO: Food
-    @Value("${rabbitmq.foodshop.queue.name}")
-    private String foodShopQueue;
-    @Value("${rabbitmq.foodshop.routing.key}")
+    @Value("${rabbitmq.food.queue.name}")
+    private String foodQueue;
+    @Value("${rabbitmq.food.routing.key}")
     private String foodRoutingKey;
 
 
@@ -44,8 +44,8 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue foodShopQueue() {
-        return QueueBuilder.durable(foodShopQueue)
+    public Queue foodQueue() {
+        return QueueBuilder.durable(foodQueue)
                 .withArgument("x-dead-letter-exchange", dlqExchange) // Dead Letter Exchange
                 .withArgument("x-dead-letter-routing-key", dlqRoutingKey) // Dead Letter Routing Key
                 .build();
@@ -76,8 +76,8 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding foodShopbinding() {
-        return BindingBuilder.bind(foodShopQueue())
+    public Binding foodbinding() {
+        return BindingBuilder.bind(foodQueue())
                 .to(exchange())
                 .with(foodRoutingKey);
     }
