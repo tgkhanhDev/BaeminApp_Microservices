@@ -84,6 +84,8 @@ export class CartApiService {
     }
 
     async addItemToCart(req: AddCartItemRequestDto) {
+        console.log("req:", req);
+        
         const {account_id, food_id, quantity} = req
 
 
@@ -103,9 +105,10 @@ export class CartApiService {
                     quantity: item.quantity + quantity
                 }
             })
-        }else if (!item) {
-            throw new HttpException("Id of account or food not found", HttpStatus.BAD_REQUEST);
         }
+        // else if (!item) {
+        //     throw new HttpException("Id of account or food not found", HttpStatus.BAD_REQUEST);
+        // }
 
         return await this.postgresDAO.cartitem.create({
             data: {

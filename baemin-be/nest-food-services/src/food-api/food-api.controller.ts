@@ -39,7 +39,6 @@ export class FoodApiController implements OnModuleInit {
         res = await this.foodApiService.findByShopId(shopId);
       }
       this.rabbitMQService.sendResponse(msg, res);
-
     }
   }
 

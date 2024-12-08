@@ -33,10 +33,7 @@ export class ShopApiController implements OnModuleInit {
       if (routingKey == 'shop.get-all-filtered') {
 
         const shopFilterRequestDto = JSON.parse(msg.content.toString());
-        console.log("shopFilterRequestDto0: ", shopFilterRequestDto);
-        
         let payload = null;
-
         if(shopFilterRequestDto != null){
           payload = await this.parseJsonToDto(shopFilterRequestDto, ShopFilterRequestDto)
         }
@@ -48,7 +45,7 @@ export class ShopApiController implements OnModuleInit {
         let shopId = msg.content.toString().replace(/^"|"$/g, '');
         res = await this.shopApiService.findShopById(shopId);
       }
-      console.log("res: ", res);
+      console.log("resShop: ", res);
 
       this.rabbitMQService.sendResponse(msg, res);
 
