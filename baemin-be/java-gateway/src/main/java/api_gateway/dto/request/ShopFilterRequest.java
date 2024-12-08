@@ -1,5 +1,6 @@
 package api_gateway.dto.request;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,20 +13,46 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShopFilterRequest {
-    @NotNull
-    @Email
-    String email;
+    String label;
+    String location;
+    String name;
 
-    @NotNull
-    String phoneNumber;
 
-    @NotNull
-    String firstName;
+//    {"label":"Food", "location":"Ha_Noi", "name":"Dessert"}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("{");
+        boolean isFirst = true;
+        if (label != null) {
+            if(!isFirst){
+                sb.append(", ");
+            }
+            sb.append("\"label\":\"").append(label).append("\"");
+            isFirst = false;
+        }
+        if (location != null) {
+            if(!isFirst){
+                sb.append(", ");
+            }
+            sb.append("\"location\":\"").append(location).append("\"");
+            isFirst = false;
+        }
+        if (name != null){
+            if(!isFirst){
+                sb.append(", ");
+            }
+            sb.append("\"name\":\"").append(name).append("\"");
+            isFirst = false;
+        }
+        sb.append("}");
+        return sb.toString();
+    }
 
-    @NotNull
-    String lastName;
-
-    @NotNull
-    @Size(min = 5, message = "Mật khẩu phải có ít nhất 5 ký tự")
-    String password;
+    public String toJson(ShopFilterRequest filter) {
+        try {
+            return new ObjectMapper().writeValueAsString(filter);
+        } catch (Exception e) {
+            throw new RuntimeException("Error converting ShopFilterRequest to JSON", e);
+        }
+    }
 }

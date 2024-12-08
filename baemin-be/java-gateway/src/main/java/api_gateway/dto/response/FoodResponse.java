@@ -15,8 +15,8 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FoodResponse {
-    UUID foodId;
-    String foodName;
+    UUID food_id;
+    String food_name;
     String description;
     int price;
     String type;

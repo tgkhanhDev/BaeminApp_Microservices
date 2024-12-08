@@ -1,5 +1,6 @@
 package api_gateway.controller;
 
+import api_gateway.dto.request.CreateCartItem;
 import api_gateway.dto.request.ShopFilterRequest;
 import api_gateway.dto.response.FoodResponse;
 import api_gateway.dto.response.ShopDetailResponse;
@@ -16,35 +17,61 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/shop-api")
-public class ShopController {
+@RequestMapping("/cart-api")
+public class CartController {
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
-    @Value("${rabbitmq.shop.queue.name}")
-    private String shopQueue;
+    @Value("${rabbitmq.cart.queue.name}")
+    private String cartQueue;
     private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public ShopController(RabbitTemplate rabbitTemplate) {
+    public CartController(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    @GetMapping("")
-    ArrayList<ShopDetailResponse> getShops(@RequestBody(required = false) ShopFilterRequest filter ) throws JsonProcessingException {
+    @GetMapping("/{userId}")
+    Object getCartByAccountId(@PathVariable("userId") String userId){
+        String correlationId = UUID.randomUUID().toString();
+        String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
+
+        // Send the request
+        rabbitTemplate.convertAndSend(
+                exchange,
+                "cart.get-all-by-user-id",
+                userId,
+                message -> {
+                    message.getMessageProperties().setCorrelationId(correlationId);
+                    message.getMessageProperties().setReplyTo(replyQueueName); // Dynamic reply queue
+                    return message;
+                }
+        );
+
+        var responseMessage = rabbitTemplate.receiveAndConvert(replyQueueName, 5000); // Wait for up to 5 seconds
+
+        if (responseMessage.equals("null")) {
+            throw new AuthenException(ErrorCode.USER_NOT_EXISTED);
+        }
+
+        return responseMessage;
+    }
+
+    @PostMapping("")
+    Object addCartItem(@RequestBody(required = true) CreateCartItem cartItem){
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
 
         // Serialize payload
         String payload = "";
-        if (filter != null) {
-            payload = filter.toString(); // Convert object to JSON
+        if (cartItem != null) {
+            payload = cartItem.toString(); // Convert object to JSON
         }
 
         // Send the request
         rabbitTemplate.convertAndSend(
                 exchange,
-                "shop.get-all-filtered",
+                "cart.add-item",
                 payload,
                 message -> {
                     message.getMessageProperties().setCorrelationId(correlationId);
@@ -53,29 +80,25 @@ public class ShopController {
                 }
         );
 
-        // Wait for response
-        ArrayList<ShopDetailResponse> responseMessage = (ArrayList<ShopDetailResponse>) rabbitTemplate.receiveAndConvert(replyQueueName, 5000); // Wait for up to 5 seconds
+        var responseMessage = rabbitTemplate.receiveAndConvert(replyQueueName, 5000); // Wait for up to 5 seconds
 
         if (responseMessage.equals("null")) {
             throw new AuthenException(ErrorCode.USER_NOT_EXISTED);
         }
 
-        // Process the response
-//        System.out.println("Received response: " + responseMessage);
-
         return responseMessage;
     }
 
-    @GetMapping("/{shopId}")
-    ShopDetailResponse findShopById(@PathVariable("shopId") String shopId){
+    @DeleteMapping("/delete-item/{cartId}")
+    Object deleteCartItem(@PathVariable("cartId") String cartId){
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
 
         // Send the request
         rabbitTemplate.convertAndSend(
                 exchange,
-                "shop.get-by-id",
-                shopId,
+                "cart.delete-item",
+                cartId,
                 message -> {
                     message.getMessageProperties().setCorrelationId(correlationId);
                     message.getMessageProperties().setReplyTo(replyQueueName); // Dynamic reply queue
@@ -83,16 +106,12 @@ public class ShopController {
                 }
         );
 
-        Object responseMessage = rabbitTemplate.receiveAndConvert(replyQueueName, 5000); // Wait for up to 5 seconds
+        var responseMessage = rabbitTemplate.receiveAndConvert(replyQueueName, 5000); // Wait for up to 5 seconds
 
         if (responseMessage.equals("null")) {
             throw new AuthenException(ErrorCode.USER_NOT_EXISTED);
         }
 
-        // Process the response
-
-        return new ObjectMapper().convertValue(responseMessage, ShopDetailResponse.class);
-
+        return responseMessage;
     }
-
 }
