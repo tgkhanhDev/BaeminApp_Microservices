@@ -12,6 +12,8 @@ export class ShopApiService {
 
     findAllShopFilter(shopFilterRequestDto: ShopFilterRequestDto): Promise<ShopResponseDto[]> {
 
+        console.log("shopFilterRequestDto: ", shopFilterRequestDto);
+        
         const { label, location, name } = shopFilterRequestDto;
 
         return this.postgresDAO.shop.findMany({

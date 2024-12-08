@@ -28,28 +28,20 @@ export class FoodApiController implements OnModuleInit {
       const routingKey = msg.fields.routingKey;
       let res = null;
       if (routingKey == 'food.get-all') {
-        res = await this.foodApiService.findAll();
-        
+        res = await this.foodApiService.findAll(); 
+      } else if (routingKey == 'food.get-by-id'){
+        //{foodId} : string
+        //! no co kieur "U-U-D-I" ??:D
+        let foodId = msg.content.toString().replace(/^"|"$/g, ''); 
+        res = await this.foodApiService.findById(foodId);
+      } else if (routingKey == 'food.get-all-by-shop-id'){
+        let shopId = msg.content.toString().replace(/^"|"$/g, ''); 
+        res = await this.foodApiService.findByShopId(shopId);
       }
-
-      this.sendResponse(msg, res);
+      this.rabbitMQService.sendResponse(msg, res);
 
     }
   }
-
-  private sendResponse(msg: ConsumeMessage, response: any) {
-    // Extract the correlationId and replyTo properties from the message
-    const correlationId = msg.properties.correlationId;
-    const replyQueue = msg.properties.replyTo;
-    
-    // Send the response back to the queue specified by replyTo
-    this.rabbitMQService.getChannel().sendToQueue(replyQueue, Buffer.from(JSON.stringify(response)), {
-      correlationId: correlationId, // Associate the response with the original request
-      replyTo: replyQueue // Optional: Include the reply queue again (usually not necessary)
-    });
-
-  }
-
 
   // async findAllFoodsConsumer(msg: ConsumeMessage) {
   //   //get Data

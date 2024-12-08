@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaPostgresService } from 'src/prisma/prisma.service';
 import { CreateFoodDto } from './dto/request/create-food.dto';
 import { Food, FoodType } from './entities/food.entity';
-import { Prisma, food_type as PrismaFoodType } from '.prismas/client-postgres';
+import { food_type, Prisma, food_type as PrismaFoodType } from '.prismas/client-postgres';
 import { UpdateFoodDto } from './dto/request/update-food.dto';
 import { RabbitMQService } from 'src/rabbit/rabbit.service';
 
@@ -18,12 +18,11 @@ export class FoodApiService {
     }
 
     findAll() {
-
         return this.postgresDAO.food.findMany();
     }
 
     findById(id: string) {
-        return this.postgresDAO.food.findFirstOrThrow({
+        return this.postgresDAO.food.findUnique({
             where: {
                 food_id: id
             }
@@ -31,7 +30,7 @@ export class FoodApiService {
     }
 
     async findByShopId(shop_id: string): Promise<Food[]> {
-
+        
         const isShopExist = await this.postgresDAO.shop.findUnique({
             where: {
                 shop_id

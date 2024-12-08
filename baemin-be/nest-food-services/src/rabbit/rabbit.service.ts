@@ -63,4 +63,18 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
     public getChannel() {
         return this.channel;
     }
+
+
+    public sendResponse(msg: amqp.ConsumeMessage, response: any) {
+        // Extract the correlationId and replyTo properties from the message
+        const correlationId = msg.properties.correlationId;
+        const replyQueue = msg.properties.replyTo;
+
+        // Send the response back to the queue specified by replyTo
+        this.getChannel().sendToQueue(replyQueue, Buffer.from(JSON.stringify(response)), {
+            correlationId: correlationId, // Associate the response with the original request
+            replyTo: replyQueue // Optional: Include the reply queue again (usually not necessary)
+        });
+
+    }
 }
