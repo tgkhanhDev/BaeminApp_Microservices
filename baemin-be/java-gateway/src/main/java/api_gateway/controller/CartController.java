@@ -114,4 +114,29 @@ public class CartController {
 
         return responseMessage;
     }
+
+    @DeleteMapping("/empty-cart/{account_id}")
+    Object emptyCart(@PathVariable("account_id") String account_id){
+        String correlationId = UUID.randomUUID().toString();
+        String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
+        System.out.println("req: "+ account_id);
+        // Send the request
+        rabbitTemplate.convertAndSend(
+                exchange,
+                "cart.empty-cart",
+                account_id,
+                message -> {
+                    message.getMessageProperties().setCorrelationId(correlationId);
+                    message.getMessageProperties().setReplyTo(replyQueueName); // Dynamic reply queue
+                    return message;
+                }
+        );
+
+        var responseMessage = rabbitTemplate.receiveAndConvert(replyQueueName, 5000); // Wait for up to 5 seconds
+
+        if (responseMessage.equals("null")) {
+            throw new AuthenException(ErrorCode.USER_NOT_EXISTED);
+        }
+        return responseMessage;
+    }
 }

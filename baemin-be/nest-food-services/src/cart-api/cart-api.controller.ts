@@ -31,7 +31,7 @@ export class CartApiController {
       } else if (routingKey == 'cart.add-item') {
         const addCartItemRequestDto = JSON.parse(msg.content.toString());
         console.log("addCartItemRequestDto0: ", addCartItemRequestDto);
-        
+
         let payload = null;
         if (addCartItemRequestDto != null) {
           payload = await this.parseJsonToDto(addCartItemRequestDto, AddCartItemRequestDto)
@@ -42,10 +42,11 @@ export class CartApiController {
         let cartId = msg.content.toString().replace(/^"|"$/g, '');
         res = await this.cartApiService.deleteCartItem(cartId);
         this.rabbitMQService.sendResponse(msg, res);
+      } else if (routingKey == 'cart.empty-cart') {
+        let userId = msg.content.toString().replace(/^"|"$/g, '');
+        res = await this.cartApiService.emptyCartItem(userId);
+        this.rabbitMQService.sendResponse(msg, res);
       }
-
-      console.log("resCart: ", res);
-
       this.rabbitMQService.sendResponse(msg, res);
 
     }
@@ -74,80 +75,4 @@ export class CartApiController {
     }
   }
 
-    
-
-    // @Get('/:account_id')
-    // @ApiOperation({
-    //   summary: 'Fetch cart items for user',
-    // })
-    // @ApiParam({
-    //   name: 'account_id',
-    //   required: true,
-    //   type: String
-    // })
-    // async getCartItemsByUserId(@Param('account_id') account_id: string) {
-    //   return this.cartApiService.findCartItemByUserId(account_id);
-    // }
-
-    // @Delete('/delete-item/:cartId')
-    // @ApiOperation({
-    //   summary: 'Delete cart items for user',
-    // })
-    // async deleteCartItemsByUserId(@Param('cartId') cartId: string) {
-    //   return this.cartApiService.deleteCartItem(cartId);
-    // }
-
-    // @Patch('/update-cart-item')
-    // @ApiOperation({
-    //   summary: 'Delete cart items for user',
-    // })
-    // @ApiBody({
-    //   type: [UpdateCartItemRequestDto],
-    //   examples: {
-    //     example1: {
-    //       value: [
-    //         {
-    //           "cart_item_id": "",
-    //           "quantity": 1
-    //         }
-    //       ]
-    //     }
-    //   }
-    // })
-    // async updateCartItemByUserIdAndFoodId(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) cartInfo: UpdateCartItemRequestDto[]) {
-    //   return this.cartApiService.updateCartItem(cartInfo);
-    // }
-
-
-    // @Delete('/empty-cart/:account_id')
-    // @ApiOperation({
-    //   summary: 'Delete cart items for user',
-    // })
-    // @ApiParam({
-    //   name: 'account_id',
-    //   required: true,
-    //   type: String
-    // })
-    // async emptyCartItem(@Param('account_id') account_id: string) {
-    //   return this.cartApiService.emptyCartItem(account_id);
-    // }
-
-    // @Post()
-    // @ApiOperation({
-    //   summary: 'Add cart items for user',
-    // })
-    // @ApiBody({
-    //   type: AddCartItemRequestDto,
-    //   examples: {
-    //     example1: {
-    //       value: {
-    //         "account_id": "",
-    //         "food_id": "",
-    //         "quantity": 1
-    //       }
-    //     }
-    //   }
-    // })
-    // async addItemToCart(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) req: AddCartItemRequestDto) {
-    //   return this.cartApiService.addItemToCart(req);}
-  }
+}
