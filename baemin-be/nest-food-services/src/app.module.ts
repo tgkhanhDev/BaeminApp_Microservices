@@ -8,9 +8,10 @@ import { ShopModule } from './shop-api/shop-api.module';
 import { CartModule } from './cart-api/cart-api.module';
 import { RabbitMQService } from './rabbit/rabbit.service';
 import { TransactionModule } from './transaction-api/transaction-api.module';
+import { PaymentModule } from './payment-api/payment-api.module';
 
 @Module({
-  imports: [PrismaModule, FoodModule, ShopModule, CartModule, TransactionModule, ConfigModule.forRoot({ isGlobal: true })],
+  imports: [PrismaModule, FoodModule, ShopModule, CartModule, TransactionModule, PaymentModule, ConfigModule.forRoot({ isGlobal: true })],
   controllers: [AppController],
   providers: [AppService],
 })
