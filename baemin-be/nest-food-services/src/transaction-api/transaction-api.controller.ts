@@ -1,14 +1,58 @@
 import { Body, Controller, Get, Post, Query, ValidationPipe } from '@nestjs/common';
-import { TransactionApiService } from './transaction-api.service';
+import { TransactionService } from './transaction-api.service';
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { CreateTransactionDto, FilterTransactionDto } from './dto/request/create-transaction.dto';
 import { TransactionResponseDto } from './dto/response/response-transaction.dto';
 import { transaction_status } from './entities/transaction.entity';
 import { food_type } from '.prismas/client-postgres';
+import { RabbitMQService } from 'src/rabbit/rabbit.service';
+import { ConsumeMessage } from 'amqplib';
 
 @Controller('transaction')
 export class TransactionApiController {
-  constructor(private readonly transactionApiService: TransactionApiService) { }
+
+  private readonly transactionQueue = 'nest_transaction_service';
+
+  constructor(private readonly transactionService: TransactionService,
+    private readonly rabbitMQService: RabbitMQService
+  ) { }
+
+  async onModuleInit() {
+    // Listen to the queue
+    this.rabbitMQService.consume(this.transactionQueue, this.transactionQueueProducer.bind(this));
+  }
+
+
+  private async transactionQueueProducer(msg: ConsumeMessage) {
+    if (msg) {
+      const routingKey = msg.fields.routingKey;
+      let res = null;
+      if (routingKey == 'transaction.get-all-filtered') {
+        const transactionResponseDto = JSON.parse(msg.content.toString());
+        // console.log("hihi: ", transactionResponseDto);
+        
+        let payload = null;
+        if (transactionResponseDto != null) {
+          payload = await this.rabbitMQService.parseJsonToDto(transactionResponseDto, TransactionResponseDto)
+        }
+        res = await this.transactionService.getTransactionsWithFilter(payload);
+      } else if (routingKey == 'transaction.create-request') {
+        const createTransactionDto = JSON.parse(msg.content.toString());
+        // console.log("hihi1: ", createTransactionDto);
+
+        let payload = null;
+        if (createTransactionDto != null) {
+          payload = await this.rabbitMQService.parseJsonToDto(createTransactionDto, CreateTransactionDto)
+        }
+
+        res = await this.transactionService.createTransaction(payload);
+      }
+      // console.log("transRes: ", res);
+      
+      this.rabbitMQService.sendResponse(msg, res);
+
+    }
+  }
 
   @Get('')
   @ApiOperation({
@@ -56,7 +100,7 @@ export class TransactionApiController {
     },
   })
   async findTransactions(@Query() filter: FilterTransactionDto): Promise<TransactionResponseDto[]> {
-    const res = await this.transactionApiService.getTransactionsWithFilter(filter);
+    const res = await this.transactionService.getTransactionsWithFilter(filter);
     return res;
   }
 
@@ -91,7 +135,7 @@ export class TransactionApiController {
   @ApiResponse({ status: 400, description: 'Invalid input, object invalid.' })
   @ApiResponse({ status: 500, description: 'Internal server error.' })
   async createTransaction(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) req: CreateTransactionDto) {
-    const res = await this.transactionApiService.createTransaction(req);
+    const res = await this.transactionService.createTransaction(req);
     return res;
   }
 

@@ -30,7 +30,6 @@ export class CartApiController {
         res = await this.cartApiService.findCartItemByUserId(userId);
       } else if (routingKey == 'cart.add-item') {
         const addCartItemRequestDto = JSON.parse(msg.content.toString());
-        console.log("addCartItemRequestDto0: ", addCartItemRequestDto);
 
         let payload = null;
         if (addCartItemRequestDto != null) {
@@ -41,11 +40,9 @@ export class CartApiController {
       } else if (routingKey == 'cart.delete-item') {
         let cartId = msg.content.toString().replace(/^"|"$/g, '');
         res = await this.cartApiService.deleteCartItem(cartId);
-        this.rabbitMQService.sendResponse(msg, res);
       } else if (routingKey == 'cart.empty-cart') {
         let userId = msg.content.toString().replace(/^"|"$/g, '');
         res = await this.cartApiService.emptyCartItem(userId);
-        this.rabbitMQService.sendResponse(msg, res);
       }
       this.rabbitMQService.sendResponse(msg, res);
 

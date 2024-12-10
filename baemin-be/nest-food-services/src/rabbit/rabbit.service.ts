@@ -1,5 +1,7 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import * as amqp from 'amqplib';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
@@ -76,5 +78,28 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
             replyTo: replyQueue // Optional: Include the reply queue again (usually not necessary)
         });
 
+    }
+
+    public async parseJsonToDto<T>(jsonString: string, dtoClass: new () => T): Promise<T | null> {
+        try {
+            // Parse the JSON string
+            const plainObject = JSON.parse(jsonString);
+
+            // Transform to DTO instance
+            const dtoInstance = plainToInstance(dtoClass, plainObject);
+
+            // Validate the DTO instance
+            const errors = await validate(dtoInstance as object);
+
+            if (errors.length > 0) {
+                console.error('Validation errors:', errors);
+                return null; // Return null if validation fails
+            }
+
+            return dtoInstance; // Return the valid DTO instance
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            return null; // Return null if parsing fails
+        }
     }
 }

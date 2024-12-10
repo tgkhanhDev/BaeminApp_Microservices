@@ -34,7 +34,7 @@ public class TransactionFilterRequest {
             if(!isFirst){
                 sb.append(", ");
             }
-            sb.append("\"status\":").append(status);
+            sb.append("\"status\":\"").append(status).append("\"");
             isFirst = false;
         }
         sb.append("}");

@@ -27,6 +27,7 @@ public class TransactionController {
         this.rabbitTemplate = rabbitTemplate;
     }
 
+    //TODO: CATCH STATUS FOR THIS FILTER THEO ENUM
     @GetMapping("")
     Object findTransactions(@ModelAttribute TransactionFilterRequest filter){
         String correlationId = UUID.randomUUID().toString();
@@ -37,7 +38,6 @@ public class TransactionController {
         if (filter != null) {
             payload = filter.toString(); // Convert object to JSON
         }
-
         // Send the request
         rabbitTemplate.convertAndSend(
                 exchange,

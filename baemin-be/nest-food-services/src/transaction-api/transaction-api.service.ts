@@ -8,7 +8,7 @@ import { transaction_status } from './entities/transaction.entity';
 import { FoodApiService } from 'src/food-api/food-api.service';
 
 @Injectable()
-export class TransactionApiService {
+export class TransactionService {
     constructor(
         private postgresDAO: PrismaPostgresService,
         private foodApiService: FoodApiService
