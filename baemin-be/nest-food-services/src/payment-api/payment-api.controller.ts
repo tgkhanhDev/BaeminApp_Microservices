@@ -31,9 +31,15 @@ export class PaymentApiController {
           payload = await this.rabbitMQService.parseJsonToDto(createPaymentDto, CreatePaymentDto)
         }
         res = await this.paymentService.createPayment(payload);
+      } else if (routingKey == 'payment.find-by-user-id') {
+        const userId = JSON.parse(msg.content.toString());
+        res = await this.paymentService.findAllByaccountId(userId);
+      } else if (routingKey == 'payment.pay-for-payment') {
+        const paymentId = JSON.parse(msg.content.toString());
+        res = await this.paymentService.payForPayment(paymentId);
       }
+      
       console.log("PaymentRes: ", res);
-
       this.rabbitMQService.sendResponse(msg, res);
 
     }

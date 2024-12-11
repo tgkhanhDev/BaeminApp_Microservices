@@ -34,7 +34,7 @@ public class PaymentController {
 
         rabbitTemplate.convertAndSend(
                 exchange,
-                "paymentQueue.find-by-user-id",
+                "payment.find-by-user-id",
                 accountId,
                 message -> {
                     message.getMessageProperties().setCorrelationId(correlationId);
@@ -52,6 +52,7 @@ public class PaymentController {
         return responseMessage;
     }
 
+
     @PostMapping("")
     public Object createPayment(@RequestBody CreatePaymentRequest request) {
         String correlationId = UUID.randomUUID().toString();
@@ -63,13 +64,39 @@ public class PaymentController {
             payload = request.toString(); // Convert object to JSON
         }
 
-        System.out.println("payloadCreatePayment: " + payload);
+//        System.out.println("payloadCreatePayment: " + payload);
 
         // Send the request
         rabbitTemplate.convertAndSend(
                 exchange,
                 "payment.create-payment",
                 payload,
+                message -> {
+                    message.getMessageProperties().setCorrelationId(correlationId);
+                    message.getMessageProperties().setReplyTo(replyQueueName); // Dynamic reply queue
+                    return message;
+                }
+        );
+
+        var responseMessage = rabbitTemplate.receiveAndConvert(replyQueueName, 5000); // Wait for up to 5 seconds
+
+        if (responseMessage.equals("null")) {
+            throw new AuthenException(ErrorCode.USER_NOT_EXISTED);
+        }
+
+        return responseMessage;
+    }
+
+    @PatchMapping("/{paymentId}")
+    public Object payForPayment(@PathVariable("paymentId") String paymentId) {
+        String correlationId = UUID.randomUUID().toString();
+        String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
+
+        // Send the request
+        rabbitTemplate.convertAndSend(
+                exchange,
+                "payment.pay-for-payment",
+                paymentId,
                 message -> {
                     message.getMessageProperties().setCorrelationId(correlationId);
                     message.getMessageProperties().setReplyTo(replyQueueName); // Dynamic reply queue
