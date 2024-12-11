@@ -31,12 +31,13 @@ export class ShopApiController implements OnModuleInit {
       const routingKey = msg.fields.routingKey;
       let res = null;
       if (routingKey == 'shop.get-all-filtered') {
-
-        const shopFilterRequestDto = JSON.parse(msg.content.toString());
-        let payload = null;
+        const shopFilterRequestDto = JSON.parse(msg.content ?  msg.content.toString() : '{}');
+        let payload: any = "{}";
         if(shopFilterRequestDto != null){
           payload = await this.parseJsonToDto(shopFilterRequestDto, ShopFilterRequestDto)
         }
+        console.log("shopFilterRequestDto: ", shopFilterRequestDto, '=>>>>', payload);
+        
 
         res = await this.shopApiService.findAllShopFilter(payload);
       } else if (routingKey == 'shop.get-by-id') {

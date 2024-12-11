@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -186,4 +187,44 @@ public class AuthenController {
                 .code(HttpStatus.SERVICE_UNAVAILABLE.value())
                 .build();
     }
+
+    @GetMapping("/profile/{userId}")
+    UserResponse getUserProfile(@PathVariable("userId") String userId) {
+
+        try {
+            UUID uuid = UUID.fromString(userId); // This will throw an exception if the format is invalid
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format");
+        }
+
+        String correlationId = UUID.randomUUID().toString();
+        String replyQueue = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
+
+        rabbitTemplate.convertAndSend(
+                exchange,
+                routingKey,
+                userId,
+                message -> {
+                    message.getMessageProperties().setCorrelationId(correlationId);
+                    message.getMessageProperties().setReplyTo(replyQueue);
+                    message.getMessageProperties().setHeader("endpoint", "authApi-getProfile");
+                    return message;
+                }
+        );
+
+        // Wait for response
+        String messageBody = (String) rabbitTemplate.receiveAndConvert(replyQueue, 5000); // Receive as String
+
+        if (messageBody != null) {
+
+        }
+
+        return null;
+    }
+
+//    @Patch('/update-profile')
+//    UpadateUserProfile(@Body() info: UpdateUserDto) {
+//        return this.authApiService.updateUserInfo(info);
+//    }
+
 }

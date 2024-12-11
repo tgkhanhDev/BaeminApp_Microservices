@@ -14,6 +14,10 @@ export class ShopApiService {
 
         console.log("shopFilterRequestDto: ", shopFilterRequestDto);
         
+        if (!shopFilterRequestDto) {
+            return this.postgresDAO.shop.findMany(); // Return all shops if no filter is provided
+        }
+
         const { label, location, name } = shopFilterRequestDto;
 
         return this.postgresDAO.shop.findMany({

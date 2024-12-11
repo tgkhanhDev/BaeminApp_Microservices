@@ -1,9 +1,8 @@
 package api_gateway.dto.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,8 +12,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShopFilterRequest {
+    @Nullable
     String label;
+    @Nullable
     String location;
+    @Nullable
     String name;
 
 

@@ -6,6 +6,7 @@ import api_gateway.dto.request.TransactionFilterRequest;
 import api_gateway.exception.AuthenException;
 import api_gateway.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +64,7 @@ public class TransactionController {
 
     @PostMapping("")
     @Operation(summary = "Create single transaction with no payment method")
-    Object createTransactions(@RequestBody(required = true) TransactionCreateRequest req){
+    Object createTransactions(@Valid @RequestBody(required = true) TransactionCreateRequest req){
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
 

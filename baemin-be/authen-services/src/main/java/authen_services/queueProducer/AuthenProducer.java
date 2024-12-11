@@ -87,6 +87,9 @@ public class AuthenProducer {
                     UserResponse userResponse = userService.createAccount(createUserRequest);
                     customMessageSender.sendResponseDataToProducer(correlationId, replyToQueue, userResponse);
                     break;
+                case "authApi-getProfile":
+                    System.out.println("bodyHERE: "+ body);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unknown header: " + header);
             }
