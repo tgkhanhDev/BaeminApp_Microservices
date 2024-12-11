@@ -5,6 +5,7 @@ import api_gateway.dto.request.TransactionCreateRequest;
 import api_gateway.dto.request.TransactionFilterRequest;
 import api_gateway.exception.AuthenException;
 import api_gateway.exception.ErrorCode;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,7 @@ public class TransactionController {
 
     //TODO: CATCH STATUS FOR THIS FILTER THEO ENUM
     @GetMapping("")
+    @Operation(summary = "Get all transacitons with filter")
     Object findTransactions(@ModelAttribute TransactionFilterRequest filter){
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
@@ -60,6 +62,7 @@ public class TransactionController {
     }
 
     @PostMapping("")
+    @Operation(summary = "Create single transaction with no payment method")
     Object createTransactions(@RequestBody(required = true) TransactionCreateRequest req){
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());

@@ -8,6 +8,7 @@ import api_gateway.exception.AuthenException;
 import api_gateway.exception.ErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,7 @@ public class CartController {
     }
 
     @GetMapping("/{userId}")
+    @Operation(summary = "Get cart items by user id")
     Object getCartByAccountId(@PathVariable("userId") String userId){
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
@@ -58,6 +60,7 @@ public class CartController {
     }
 
     @PostMapping("")
+    @Operation(summary = "Add item to cart")
     Object addCartItem(@RequestBody(required = true) CreateCartItem cartItem){
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
@@ -90,6 +93,7 @@ public class CartController {
     }
 
     @DeleteMapping("/delete-item/{cartId}")
+    @Operation(summary = "Delete items from cart")
     Object deleteCartItem(@PathVariable("cartId") String cartId){
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
@@ -116,6 +120,7 @@ public class CartController {
     }
 
     @DeleteMapping("/empty-cart/{account_id}")
+    @Operation(summary = "Empty cart by user id")
     Object emptyCart(@PathVariable("account_id") String account_id){
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());

@@ -6,6 +6,7 @@ import api_gateway.dto.response.FoodResponse;
 import api_gateway.exception.AuthenException;
 import api_gateway.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,7 @@ public class FoodController {
     }
 
     @GetMapping("/food")
+    @Operation(summary = "Get all food")
     ArrayList<FoodResponse> getFoods() {
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
@@ -65,6 +67,7 @@ public class FoodController {
     }
 
     @GetMapping("/food/{foodId}")
+    @Operation(summary = "Get food by Id ")
     FoodResponse findFoodById(@PathVariable("foodId") String foodId){
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());

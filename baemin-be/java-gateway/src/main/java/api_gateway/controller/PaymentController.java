@@ -5,6 +5,11 @@ import api_gateway.dto.request.TransactionCreateRequest;
 import api_gateway.dto.request.TransactionFilterRequest;
 import api_gateway.exception.AuthenException;
 import api_gateway.exception.ErrorCode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +33,7 @@ public class PaymentController {
     }
 
     @GetMapping("/{accountId}")
+    @Operation(summary = "Get all payments by user id")
     public Object findPaymentsByUserId(@PathVariable("accountId") String accountId) {
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
@@ -54,6 +60,7 @@ public class PaymentController {
 
 
     @PostMapping("")
+    @Operation(summary = "Paying cart / Buy now")
     public Object createPayment(@RequestBody CreatePaymentRequest request) {
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
@@ -88,6 +95,16 @@ public class PaymentController {
     }
 
     @PatchMapping("/{paymentId}")
+    @Operation(summary = "Paying for payment (set status)")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "This action will also deduct the amount in food stock\n",
+//                    content = {
+//                            @Content(mediaType = "application/json",
+//                                    schema = @Schema(implementation = TransactionCreateRequest.class))
+//                    })
+//            }
+//    )
+//    This action will also deduct the amount in food stock
     public Object payForPayment(@PathVariable("paymentId") String paymentId) {
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());

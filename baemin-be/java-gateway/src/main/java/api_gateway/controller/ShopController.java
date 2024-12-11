@@ -7,6 +7,7 @@ import api_gateway.exception.AuthenException;
 import api_gateway.exception.ErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,7 @@ public class ShopController {
     }
 
     @GetMapping("")
+    @Operation(summary = "Get all shop with filter")
     ArrayList<ShopDetailResponse> getShops(@RequestBody(required = false) ShopFilterRequest filter ) throws JsonProcessingException {
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
@@ -67,6 +69,7 @@ public class ShopController {
     }
 
     @GetMapping("/{shopId}")
+    @Operation(summary = "Get shop detail by Id")
     ShopDetailResponse findShopById(@PathVariable("shopId") String shopId){
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
