@@ -9,9 +9,11 @@ import { CartModule } from './cart-api/cart-api.module';
 import { RabbitMQService } from './rabbit/rabbit.service';
 import { TransactionModule } from './transaction-api/transaction-api.module';
 import { PaymentModule } from './payment-api/payment-api.module';
+import { CacheManagerService } from './cache-manager/cache-manager.service';
+import { CacheManagerModule } from './cache-manager/cache-manager.module';
 
 @Module({
-  imports: [PrismaModule, FoodModule, ShopModule, CartModule, TransactionModule, PaymentModule, ConfigModule.forRoot({ isGlobal: true })],
+  imports: [PrismaModule, FoodModule, ShopModule, CartModule, TransactionModule, PaymentModule, ConfigModule.forRoot({ isGlobal: true }), CacheManagerModule],
   controllers: [AppController],
   providers: [AppService],
 })

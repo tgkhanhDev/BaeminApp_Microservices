@@ -1,4 +1,4 @@
-// File: /home/tgkhanhdev/Desktop/Projects/Baemin_Nestjs_Mono/baemin-fe/src/app/dashboard/layout.tsx
+// File: /home/tgkhanhdev/Desktop/Projects/BaeminApp_Microservices/baemin-fe/src/app/dashboard/layout.tsx
 import * as entry from '../../../../src/app/dashboard/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

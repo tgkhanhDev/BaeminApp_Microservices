@@ -1,16 +1,19 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { PrismaPostgresService } from 'src/prisma/prisma.service';
 import { CreateFoodDto } from './dto/request/create-food.dto';
 import { Food, FoodType } from './entities/food.entity';
 import { food_type, Prisma, food_type as PrismaFoodType } from '.prismas/client-postgres';
 import { UpdateFoodDto } from './dto/request/update-food.dto';
 import { RabbitMQService } from 'src/rabbit/rabbit.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class FoodApiService {
 
     constructor(
         private postgresDAO: PrismaPostgresService,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) { }
 
     create(createFoodDto: CreateFoodDto) {
