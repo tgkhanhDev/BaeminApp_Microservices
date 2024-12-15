@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>authen-services</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>authen-service</artifactId>
+<!--	<version>0.0.1-SNAPSHOT</version>-->
 	<name>authen-services</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Authen and user service</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -137,6 +137,15 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version> <!-- Ensure the version is 3.8.1 or later -->
+				<configuration>
+					<source>17</source> <!-- Set source compatibility to Java 17 -->
+					<target>17</target> <!-- Set target compatibility to Java 17 -->
 				</configuration>
 			</plugin>
 		</plugins>
