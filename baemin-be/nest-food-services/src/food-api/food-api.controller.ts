@@ -10,8 +10,6 @@ import { CacheManagerService } from 'src/cache-manager/cache-manager.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
-@Controller('food-api')
-@ApiTags("Food")
 export class FoodApiController implements OnModuleInit {
 
   private readonly foodQueue = 'nest_food_service';
@@ -45,16 +43,19 @@ export class FoodApiController implements OnModuleInit {
       // //TODO: CACHE TEST
       else if (routingKey == 'food.get-cache-by-key') {
         let key = msg.content.toString().replace(/^"|"$/g, '');
+        console.log("keyb4: ", key);
+        
         res = await this.cacheManager.get(key);
          
         if (res) {
           try {
             // Try to parse as JSON (for objects stored as JSON)
             res = JSON.parse(res);
-            console.log("res: ", res);
+            // console.log("resGetKey: ", res);
           } catch (error) {
             // If parsing fails, assume it's a plain string
-            res = res;
+            // res = res; console.log("res: ", res);
+
           }
         } else {
           res = undefined; // Handle case where cache is empty
@@ -68,7 +69,9 @@ export class FoodApiController implements OnModuleInit {
         if (req != null) {
           payload = await this.rabbitMQService.parseJsonToDto(req, ObjectCacheBody)
         }
+        
         // console.log("reqGETCACHE: ", req, '=>>>>', payload);
+
         await this.cacheManager.set(payload.key, payload.value);
         res = 'Set '+payload.key+' With value: ' + payload.value;
       } else if (routingKey == 'food.delete-cache-by-key'){

@@ -20,8 +20,20 @@ export class FoodApiService {
         return 'This action adds a new food';
     }
 
-    findAll() {
-        return this.postgresDAO.food.findMany();
+    async findAll() {
+        try {
+            const resCache = await this.cacheManager.get("food-get-all");
+            if (resCache) {
+                // console.log("Cache hit: ", resCache);
+                return resCache;
+            }
+            const res = await this.postgresDAO.food.findMany();
+            await this.cacheManager.set("food-get-all", res);
+            return res;
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            throw error; // or return a fallback response
+        }
     }
 
     findById(id: string) {

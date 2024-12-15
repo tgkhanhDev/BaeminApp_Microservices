@@ -145,5 +145,5 @@ public class CacheController {
 @AllArgsConstructor
 class CacheRequest {
     private String key;
-    private String value;
+    private Object value;
 }
