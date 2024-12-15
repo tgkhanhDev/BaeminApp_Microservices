@@ -34,7 +34,7 @@ public class ShopController {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    @GetMapping("")
+    @GetMapping("/get-all")
     @Operation(summary = "Get all shop with filter")
     ArrayList<ShopDetailResponse> getShops(
             @Parameter(description = "Filter shops by label (e.g., FOOD, DRINK, etc.).",

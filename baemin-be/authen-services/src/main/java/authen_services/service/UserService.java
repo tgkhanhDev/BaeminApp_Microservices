@@ -5,6 +5,8 @@ import authen_services.dto.request.LoginRequest;
 import authen_services.dto.request.UpdateUserRequest;
 import authen_services.dto.response.UserResponse;
 
+import java.util.UUID;
+
 public interface UserService {
     public UserResponse login(LoginRequest req);
 
@@ -13,5 +15,7 @@ public interface UserService {
     public UserResponse createAccount(CreateUserRequest req);
 
     public UserResponse getMyInfo();
+
+    public UserResponse getUserInfo(String userId);
 
 }

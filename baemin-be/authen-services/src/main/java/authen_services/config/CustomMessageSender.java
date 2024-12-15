@@ -44,6 +44,8 @@ public class CustomMessageSender {
                         .code(200)
                         .build());
 
+        System.out.println("resCac: "+ res);
+
         rabbitTemplate.convertAndSend(
                 "",
                 replyToQueue,
@@ -54,4 +56,5 @@ public class CustomMessageSender {
                 }
         );
     }
+
 }

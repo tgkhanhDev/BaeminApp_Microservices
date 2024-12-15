@@ -21,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -104,5 +106,11 @@ public class UserServiceImpl implements UserService {
         return UserResponse.builder()
                 .email("LOLOLOL")
                 .build();
+    }
+
+    @Override
+    public UserResponse getUserInfo(String userId) {
+
+        return userRepository.findById(UUID.fromString(userId)).map(userMapper::toUserResponse).orElse(null);
     }
 }

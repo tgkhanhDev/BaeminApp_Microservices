@@ -66,6 +66,7 @@ export class FoodApiController implements OnModuleInit {
       } else if (routingKey == 'food.add-cache') {
         let req = JSON.parse(msg.content ? msg.content.toString() : '{}');
         let payload: any = "{}";
+        
         if (req != null) {
           payload = await this.rabbitMQService.parseJsonToDto(req, ObjectCacheBody)
         }

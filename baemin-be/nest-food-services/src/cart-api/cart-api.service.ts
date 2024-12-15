@@ -84,7 +84,7 @@ export class CartApiService {
     }
 
     async addItemToCart(req: AddCartItemRequestDto) {
-        console.log("req:", req);
+        console.log("reqcc:", req);
         
         const {account_id, food_id, quantity} = req
 

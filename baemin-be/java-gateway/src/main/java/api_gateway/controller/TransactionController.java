@@ -3,9 +3,12 @@ package api_gateway.controller;
 import api_gateway.dto.request.CreateCartItem;
 import api_gateway.dto.request.TransactionCreateRequest;
 import api_gateway.dto.request.TransactionFilterRequest;
+import api_gateway.enums.ShopEnum;
 import api_gateway.exception.AuthenException;
 import api_gateway.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/transaction-api")
 public class TransactionController {
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
@@ -32,9 +35,22 @@ public class TransactionController {
     //TODO: CATCH STATUS FOR THIS FILTER THEO ENUM
     @GetMapping("")
     @Operation(summary = "Get all transacitons with filter")
-    Object findTransactions(@ModelAttribute TransactionFilterRequest filter){
+    Object findTransactions(
+                            @RequestParam(required = false) String transaction_id,
+
+                            @RequestParam(required = false) String payment_id,
+
+                            @RequestParam(required = false) String status
+
+    ) {
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
+
+        TransactionFilterRequest filter = TransactionFilterRequest.builder()
+                .transaction_id(transaction_id != null ? transaction_id : "")
+                .payment_id(payment_id != null ? payment_id : "")
+//                .status(status )
+                .build();
 
         // Serialize payload
         String payload = "";
@@ -64,7 +80,7 @@ public class TransactionController {
 
     @PostMapping("")
     @Operation(summary = "Create single transaction with no payment method")
-    Object createTransactions(@Valid @RequestBody(required = true) TransactionCreateRequest req){
+    Object createTransactions(@Valid @RequestBody(required = true) TransactionCreateRequest req) {
         String correlationId = UUID.randomUUID().toString();
         String replyQueueName = rabbitTemplate.execute(channel -> channel.queueDeclare().getQueue());
 

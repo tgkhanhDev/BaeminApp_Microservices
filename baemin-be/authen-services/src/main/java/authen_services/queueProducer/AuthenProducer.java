@@ -4,6 +4,7 @@ import authen_services.config.CustomMessageSender;
 import authen_services.dto.request.AuthenticationRequest;
 import authen_services.dto.request.CreateUserRequest;
 import authen_services.dto.request.IntrospectRequest;
+import authen_services.dto.request.LoginRequest;
 import authen_services.dto.response.ApiResponse;
 import authen_services.dto.response.AuthenticationResponse;
 import authen_services.dto.response.IntrospectResponse;
@@ -21,6 +22,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -70,11 +73,15 @@ public class AuthenProducer {
         // Use ObjectMapper to convert JSON to AuthenticationRequest
         ObjectMapper objectMapper = new ObjectMapper();
 
+//        System.out.println("header: "+ header + "  body: " + body);
+
         try {
             switch (header) {
                 case "authApi-login":
-                    AuthenticationRequest loginRequest = objectMapper.readValue(body, AuthenticationRequest.class);
-                    AuthenticationResponse loginResponse = authenticationService.authenticate(loginRequest);
+//                    AuthenticationRequest loginRequest = objectMapper.readValue(body, AuthenticationRequest.class);
+//                    AuthenticationResponse loginResponse = authenticationService.authenticate(loginRequest);
+                    LoginRequest loginRequest = objectMapper.readValue(body, LoginRequest.class);
+                    UserResponse loginResponse = userService.login(loginRequest);
                     customMessageSender.sendResponseDataToProducer(correlationId, replyToQueue, loginResponse);
                     break;
                 case "authApi-introspect":
@@ -88,7 +95,8 @@ public class AuthenProducer {
                     customMessageSender.sendResponseDataToProducer(correlationId, replyToQueue, userResponse);
                     break;
                 case "authApi-getProfile":
-                    System.out.println("bodyHERE: "+ body);
+                    UserResponse info = userService.getUserInfo(body.replaceAll("^\"|\"$", ""));
+                    customMessageSender.sendResponseDataToProducer(correlationId, replyToQueue, info);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown header: " + header);

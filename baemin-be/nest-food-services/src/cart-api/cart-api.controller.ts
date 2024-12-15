@@ -43,7 +43,33 @@ export class CartApiController {
       } else if (routingKey == 'cart.empty-cart') {
         let userId = msg.content.toString().replace(/^"|"$/g, '');
         res = await this.cartApiService.emptyCartItem(userId);
+      } else if (routingKey == 'cart.update-cart-item') {
+
+        const updateCartItemRequestDtoArray = JSON.parse(JSON.parse(msg.content.toString()));
+
+        let payload: UpdateCartItemRequestDto[] = [];
+
+        await Promise.all(
+          updateCartItemRequestDtoArray.map(async (item) => {
+            console.log("item: ", item);
+            // Ensure the item is correctly formatted before sending
+            if (!item.cart_item_id || !item.quantity) {
+              throw new Error('Invalid item data');
+            }
+            // Parse each item to the UpdateCartItemRequestDto format
+            payload.push(item);
+          })
+        );
+
+        res = await this.cartApiService.updateCartItem(payload);
       }
+
+
+      //   // Now that payload is a List of UpdateCartItemRequestDto, call your updateCartItem API
+      // } else {
+      //   throw new Error('Invalid or empty cart item data');
+      // }
+
       this.rabbitMQService.sendResponse(msg, res);
 
     }

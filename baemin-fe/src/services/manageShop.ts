@@ -9,9 +9,9 @@ export const manageShop = {
     const queryParams = new URLSearchParams();
     if (params.name) queryParams.append('name', params.name);
     if (params.location) queryParams.append('location', params.location);
-    if (params.label) queryParams.append('label', params.label);
+    if (params.label) queryParams.append('Label', params.label);    
     
-    return api.get<utilsResponse<Shop>>(`/?${queryParams.toString()}`);
+    return api.get<utilsResponse<Shop>>(`/get-all?${queryParams.toString()}`);
   },
   getShopDetail: (payload: string) =>
     api.get<ShopDetail>(`/${payload}`),

@@ -42,6 +42,7 @@ export const UpdateCartThunk = createAsyncThunk(
   "updateCart",
   async (payload: Update, { rejectWithValue }) => {
     try {
+      console.log("updateCart: ", payload);
       const data = await manageCart.updateCart(payload);
       return data.status;
     } catch (error) {
