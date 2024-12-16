@@ -1,5 +1,5 @@
-create database baemin_db;
-use baemin_db;
+create database baemin_micro_db;
+use baemin_micro_db;
 
 -- Create ENUM Types first
 CREATE TYPE user_role AS ENUM ('BUYER', 'SELLER', 'ADMIN');
@@ -98,35 +98,3 @@ CREATE TABLE transaction (
 );
 
 
-docker run -d --name elasticsearch --net node-adv-2 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:8.15.0
-
-docker run -d --name kibana --net node-adv-2 -p 5601:5601 kibana:8.15.0
-
-eyJ2ZXIiOiI4LjE0LjAiLCJhZHIiOlsiMTcyLjE5LjAuNjo5MjAwIl0sImZnciI6IjY5YTlhMDAxYjVhOWY1ZmU0MGYyODQzMGViYjNhOGI5MzM0M2E4ZTY4NjY0YmU2NTdiYjE0N2QwYmZjNDk3MDIiLCJrZXkiOiJNc0F6WTVNQjVKMF96aG1aSFpZejpiTVU1aVZzYlJJeTNzX3FTTmtLWE5RIn0=
-
-
-docker run -d -p 5044:5044 --network node-adv-2 --name logstash logstash:8.15.0
-
-
-input {
-jdbc {
-jdbc_driver_library => "/usr/share/logstash/driver/postgresql-42.2.19.jar"
-jdbc_driver_class => "org.postgresql.Driver"
-jdbc_connection_string => "jdbc:postgresql://some-postgres:5432/db_micro"
-jdbc_user => "postgres"
-jdbc_password => "170504"
-statement => "SELECT * FROM products"
-schedule => "* * * * *" # Thu thập dữ liệu mỗi phút
-}
-}
-output {
-elasticsearch {
-hosts => ["https://elasticsearch:9200"]
-ssl => true
-ssl_certificate_verification => false # Bỏ qua kiểm tra chứng chỉ SSL
-user => "elastic" # Tên người dùng
-password => "123456" # Mật khẩu
-index => "product-index" # Tên của index trong Elasticsearch
-document_id => "%{product_id}" # Dùng cột 'id' của bảng làm ID của document
-}
-stdou
