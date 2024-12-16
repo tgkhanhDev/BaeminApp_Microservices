@@ -18,7 +18,7 @@ export class CreatePaymentDto {
     account_id: string;
 
     @IsArray()
-    @ValidateNested({ each: true }) // Validate each item in the array
-    @Type(() => CreateTransactionDto) // Transform array elements
+    // @ValidateNested({ each: true }) // Validate each item in the array
+    // @Type(() => CreateTransactionDto) // Transform array elements
     transactions: CreateTransactionDto[];
 }

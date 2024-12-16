@@ -22,6 +22,7 @@ export class PaymentService {
     }
 
     async createPayment(req: CreatePaymentDto) {
+        // console.log("Req: ", req);
         const { delivery_address, message, status, transactions, account_id } = req;
 
         // Step 1: Create the Payment first, without transactions
