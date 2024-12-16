@@ -1,4 +1,8 @@
 # How to start BaeminApp_Microservices
+##  Project Overview:
+How the system work:
+
+![visualProject](https://firebasestorage.googleapis.com/v0/b/swp391-a9fd3.appspot.com/o/portfolio%2Fvisualproject.png?alt=media&token=dab33394-a8f3-4bd9-ad8d-21ec46a6c510)
 
 ## 1. Third-party setup:
 ####    RabbitMQ
