@@ -46,7 +46,7 @@ export class ShopApiController implements OnModuleInit {
         let shopId = msg.content.toString().replace(/^"|"$/g, '');
         res = await this.shopApiService.findShopById(shopId);
       }
-      console.log("resShop: ", res);
+      // console.log("resShop: ", res);
 
       this.rabbitMQService.sendResponse(msg, res);
 

@@ -71,7 +71,7 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
         // Extract the correlationId and replyTo properties from the message
         const correlationId = msg.properties.correlationId;
         const replyQueue = msg.properties.replyTo;
-        console.log("res to send: ", response);
+        // console.log("res to send: ", response);
         
         // Send the response back to the queue specified by replyTo
         this.getChannel().sendToQueue(replyQueue, Buffer.from(JSON.stringify(response)), {

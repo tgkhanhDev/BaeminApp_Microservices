@@ -11,9 +11,10 @@ import { TransactionModule } from './transaction-api/transaction-api.module';
 import { PaymentModule } from './payment-api/payment-api.module';
 import { CacheManagerService } from './cache-manager/cache-manager.service';
 import { CacheManagerModule } from './cache-manager/cache-manager.module';
+import { ElasticModule } from './elastic/elastic.module';
 
 @Module({
-  imports: [PrismaModule, FoodModule, ShopModule, CartModule, TransactionModule, PaymentModule, ConfigModule.forRoot({ isGlobal: true }), CacheManagerModule],
+  imports: [PrismaModule, FoodModule, ShopModule, CartModule, TransactionModule, PaymentModule, ConfigModule.forRoot({ isGlobal: true }), CacheManagerModule, ElasticModule],
   controllers: [AppController],
   providers: [AppService],
 })
