@@ -1,8 +1,13 @@
 # How to start BaeminApp_Microservices
 ##  Project Overview:
-How the system work:
 
-![visualProject](https://firebasestorage.googleapis.com/v0/b/swp391-a9fd3.appspot.com/o/portfolio%2Fvisualproject.png?alt=media&token=dab33394-a8f3-4bd9-ad8d-21ec46a6c510)
+#### Handle request integration:
+![visualProject](https://firebasestorage.googleapis.com/v0/b/swp391-a9fd3.appspot.com/o/portfolio%2FvisualProject.png?alt=media&token=a98b3488-c5c6-4bac-a5e1-fff60a55b8f4)
+
+![topicExchange](https://chathurangat.wordpress.com/wp-content/uploads/2017/11/screen-shot-2017-11-12-at-4-56-34-am.png)
+
+#### How app interact with ELK and Redis:
+![ELKwithApp](https://firebasestorage.googleapis.com/v0/b/swp391-a9fd3.appspot.com/o/portfolio%2FintergrateELK.png?alt=media&token=d650f2a2-fbb1-40e7-9c38-4b25a9de594a)
 
 ## 1. Third-party setup:
 ####    RabbitMQ
